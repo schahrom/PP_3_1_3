@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.kata.spring.boot_security.demo.model.InitClass;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -18,9 +19,13 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    RoleService roleService;
+    private RoleService roleService;
+
+    @Autowired
+    private static InitClass initClass;
+
 
     @GetMapping("/list")
     public String listUser(Model model) {

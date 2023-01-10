@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.kata.spring.boot_security.demo.model.InitClass;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
@@ -12,11 +13,15 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private InitClass initClass;
 
 
     @RequestMapping("/")
     public String homePage() {
+        initClass.createUser();
         return "redirect:/login";
     }
 
