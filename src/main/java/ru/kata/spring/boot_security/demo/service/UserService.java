@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
 
-    private Optional<User> findByUserName(String name) {
+    public Optional<User> findByUserName(String name) {
         return userRepository.findByUsername(name);
     }
 
