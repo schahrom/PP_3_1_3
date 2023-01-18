@@ -20,9 +20,9 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-12 p-2 bg-dark text-white ">
-            <a th:text="*{user.email}" class="font-weight-bold text-white" id="headerUsername"></a>
+            <a th:text="*{admin.email}" class="font-weight-bold text-white" id="headerUsername"></a>
             <a> with roles:</a>
-            <a th:text="*{user.roles}" id="headerRoles"></a>
+            <a th:text="*{admin.roles}" id="headerRoles"></a>
             <a th:href="@{/logout}" class="float-right text-secondary"> Logout </a>
           </div>
         </div>
@@ -73,186 +73,201 @@
                       <th scope="col">Email</th>
                       <th scope="col">Role</th>
                       <th scope="col">Edit</th>
-                      <th scope="col">Delte</th>
+                      <th scope="col">Delete</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="user: ${allUser}">
-                      <td th:text="${user.id}"/>
-                      <td th:text="${user.getUsername()}"/>
-                      <td th:text="${user.getLastName()}"/>
-                      <td th:text="${user.age}"/>
-                      <td th:text="${user.getEmail()}"/>
-                      <td th:text="${user.getRoles()}"/>
-                      <th>
+                    <tr th:each="users: ${allUser}">
+                      <td th:text="${users.id}"/>
+                      <td th:text="${users.getUsername()}"/>
+                      <td th:text="${users.getLastName()}"/>
+                      <td th:text="${users.age}"/>
+                      <td th:text="${users.getEmail()}"/>
+                      <td th:text="${users.getRoles()}"/>
+                      <td>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-info" data-toggle="modal"
-                                data-target="#editModal">
+                        <button  type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#editModal" id="eBtn" th:data-bs-target="#{'#editModal'+users.id}">
                           Edit
                         </button>
-
-                        <!-- Модальное окно -->
-                        <div class="modal fade" id="editModal" data-backdrop="static"
-                             data-keyboard="false" tabindex="-1"
-                             aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Edit
-                                  user</h5>
-                                <button type="button" class="close" data-dismiss="modal"
-                                        aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body w-50 p-3"
-                                   style="margin: auto; text-align: center">
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="ID">ID</label>
-                                  <input type="text" class="form-control"
-                                         id="ID" readonly/>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="firstName">First
-                                    name</label>
-                                  <input type="text" class="form-control"
-                                         id="firstName"
-                                         placeholder="first name"/>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="lastName">Last
-                                    name</label>
-                                  <input type="text" class="form-control"
-                                         id="lastName"
-                                         placeholder="last name"/>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="Agee">Age</label>
-                                  <input type="number" class="form-control"
-                                         id="Agee"
-                                         placeholder="Age"/>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="emaill">Email</label>
-                                  <input type="email" class="form-control"
-                                         id="emaill"
-                                         placeholder="email@mai.ru"/>
-                                </div>
-                                <label class="font-weight-bold" for="inputPassword555">Password</label>
-                                <input type="password" id="inputPassword555"
-                                       class="form-control"
-                                       aria-describedby="passwordHelpBlock"/>
-                                  <div class="form-group">
-                                    <label class="font-weight-bold" for="rol">Role</label>
-                                    <select class="custom-select form-control" id="rol" name="role" multiple size="2">
-                                    </select>
-                                  </div>
-                                    <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Edit
-                                    </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </th>
-                      <th>
+                      </td>
+                      <td>
+                        <!-- Button trigger modal -->
                         <button type="button" class="btn btn-danger" data-toggle="modal"
                                 data-target="#exampleModal">
                           Delete
                         </button>
+                      </td>
 
-                        <!-- Modal -->
-                        <div class="modal" id="exampleModal" tabindex="-1" role="dialog"
-                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Delete
-                                  user</h5>
-                                <button type="button" class="close" data-dismiss="modal"
-                                        aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
+
+
+
+
+                      <!-- Модальное окно -->
+                      <div class="modal fade" th:id="${'editModal'+users.id}" data-backdrop="static"
+                           data-keyboard="false" tabindex="-1"
+                           aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <form id="editForm" th:method="PATCH" th:action="@{/admin/{id}(id=${users.id})}" th:object="${users}">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="staticBackdropLabel">Edit
+                                user</h5>
+                              <button type="button" class="close" data-dismiss="modal"
+                                      aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body w-50 p-3"
+                                 style="margin: auto; text-align: center">
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="ID" >ID</label>
+                                <input type="text" class="form-control"
+                                       id="ID" readonly name="id" th:value="${users.id}"/>
                               </div>
-                              <div class="modal-body w-50 p-3"
-                                   style="margin: auto; text-align: center">
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="exampleFormControlInput111">ID</label>
-                                  <input type="email" class="form-control"
-                                         id="exampleFormControlInput111"
-                                         placeholder="id" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="exampleFormControlInput11">First
-                                    name</label>
-                                  <input type="email" class="form-control"
-                                         id="exampleFormControlInput11"
-                                         placeholder="first name" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="exampleFormControlInput22">Last
-                                    name</label>
-                                  <input type="email" class="form-control"
-                                         id="exampleFormControlInput22"
-                                         placeholder="last name" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="exampleFormControlInput33">Age</label>
-                                  <input type="email" class="form-control"
-                                         id="exampleFormControlInput33"
-                                         placeholder="Age" readonly>
-                                </div>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="exampleFormControlInput44">Email</label>
-                                  <input type="email" class="form-control"
-                                         id="exampleFormControlInput44"
-                                         placeholder="email@mai.ru" readonly>
-                                </div>
-                                <label class="font-weight-bold" for="inputPassword55">Password</label>
-                                <input type="password" id="inputPassword55"
-                                       class="form-control"
-                                       aria-describedby="passwordHelpBlock" readonly>
-                                <div class="form-group">
-                                  <label class="font-weight-bold"
-                                         for="exampleFormControlSelect11">Role</label>
-                                  <select class="custom-select form-control"
-                                          id="exampleFormControlSelect11" multiple
-                                          disabled size="2">
-                                    <option>ADMIN</option>
-                                    <option>USER</option>
-                                  </select>
-                                </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="username">First
+                                  name</label>
+                                <input type="text" class="form-control"
+                                       id="username"
+                                       placeholder="first name" name="username" th:value="${users.username}"/>
                               </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close
-                                </button>
-                                <button type="button" class="btn btn-danger">Delete
-                                </button>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="lastName">Last
+                                  name</label>
+                                <input type="text" class="form-control"
+                                       id="lastName"
+                                       placeholder="last name" name="lastName" th:value="${users.lastName}"/>
                               </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="Agee">Age</label>
+                                <input type="number" class="form-control"
+                                       id="Agee"
+                                       placeholder="Age" name="age" th:value="${users.age}"/>
+                              </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="emaill">Email</label>
+                                <input type="email" class="form-control"
+                                       id="emaill"
+                                       placeholder="email@mai.ru" name="email" th:value="${users.email}"/>
+                              </div>
+                              <label class="font-weight-bold" for="inputPassword555">Password</label>
+                              <input type="password" id="inputPassword555"
+                                     class="form-control"
+                                     aria-describedby="passwordHelpBlock" name="password" th:value="${users.password}"/>
+                              <div class="form-group">
+                                <label class="font-weight-bold" for="roles">Role</label>
+                                <select class="custom-select form-control" id="role" name="roles" multiple size="2">
+                                </select>
+                              </div>
+                              <button type="button" class="btn btn-secondary"
+                                      data-dismiss="modal">Close
+                              </button>
+                              <button type="button" id="save-user-button" class="btn btn-primary" >Edit
+                              </button>
+                            </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                      <!-- Modal -->
+                      <div class="modal" id="exampleModal" tabindex="-1" role="dialog"
+                           aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Delete
+                                user</h5>
+                              <button type="button" class="close" data-dismiss="modal"
+                                      aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body w-50 p-3"
+                                 style="margin: auto; text-align: center">
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="exampleFormControlInput111">ID</label>
+                                <input type="email" class="form-control"
+                                       id="exampleFormControlInput111"
+                                       placeholder="id" readonly>
+                              </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="exampleFormControlInput11">First
+                                  name</label>
+                                <input type="email" class="form-control"
+                                       id="exampleFormControlInput11"
+                                       placeholder="first name" readonly>
+                              </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="exampleFormControlInput22">Last
+                                  name</label>
+                                <input type="email" class="form-control"
+                                       id="exampleFormControlInput22"
+                                       placeholder="last name" readonly>
+                              </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="exampleFormControlInput33">Age</label>
+                                <input type="email" class="form-control"
+                                       id="exampleFormControlInput33"
+                                       placeholder="Age" readonly>
+                              </div>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="exampleFormControlInput44">Email</label>
+                                <input type="email" class="form-control"
+                                       id="exampleFormControlInput44"
+                                       placeholder="email@mai.ru" readonly>
+                              </div>
+                              <label class="font-weight-bold" for="inputPassword55">Password</label>
+                              <input type="password" id="inputPassword55"
+                                     class="form-control"
+                                     aria-describedby="passwordHelpBlock" readonly>
+                              <div class="form-group">
+                                <label class="font-weight-bold"
+                                       for="exampleFormControlSelect11">Role</label>
+                                <select class="custom-select form-control"
+                                        id="exampleFormControlSelect11" multiple
+                                        disabled size="2">
+                                  <option>ADMIN</option>
+                                  <option>USER</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary"
+                                      data-dismiss="modal">Close
+                              </button>
+                              <button type="button" class="btn btn-danger">Delete
+                              </button>
                             </div>
                           </div>
                         </div>
-                      </th>
+                      </div>
+
+
+
+
+
+
+
                     </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-
 
             <div class="tab-pane fade border rounded-bottom" id="profile" role="tabpanel"
                  aria-labelledby="profile-tab">
@@ -263,7 +278,7 @@
                   <div class="form-group">
                     <label class="font-weight-bold" for="username">First
                       name</label>
-                    <input type="text" class="form-control" id="username"
+                    <input type="text" class="form-control" id="usernamee"
                            placeholder="first name"  th:field="*{username}"/>
                   </div>
                   <div class="form-group">
@@ -349,15 +364,12 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="/static/main.js" ></script>
 </body>
 </html>

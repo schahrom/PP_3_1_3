@@ -41,5 +41,88 @@
 </form>
 
 
+<script>
+  $('#editModal').on('shown.bs.modal', function (event) {
+    let button = $(event.relatedTarget) // Button that triggered the modal
+    let userId = button.data('userid') // Extract info from data-* attributes
+
+    if (userId) {
+      $.get({
+        url: '/api/v1/user/' + userId,
+        success: (data) => {
+          let modal = $(this)
+          modal.find('#ID').val(data.id)
+          modal.find('#username').val(data.username)
+          modal.find('#lastName').val(data.lastName)
+          modal.find('#Agee').val(data.age)
+          modal.find('#emaill').val(data.email)
+          modal.find('#inputPassword555').val(data.password)
+          modal.find('#userRole').val(data.roles)
+        },
+        error: (err) => {
+          alert(err);
+        }
+      });
+    }
+  })
+
+  $('#save-user-button').click(function() {
+    let modal = $('#editModal')
+    let user = {
+      id: modal.find('#ID').val(),
+      username: modal.find('#username').val(),
+      lastName: modal.find('#lastName').val(),
+      age: modal.find('#Agee').val(),
+      email: modal.find('#emaill').val(),
+      password: modal.find('#inputPassword555').val(),
+      roles: modal.find('#userRole').val()
+    };
+
+    $.ajax({
+      url: '/api/v1/user',
+      type: 'POST',
+      data: JSON.stringify(user),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: () => {
+        location.reload()
+      },
+      error: (err) => {
+        alert(err);
+      }
+    })
+
+    modal.modal('hide');
+  });
+
+</script>
+
+
+
+
+
+<!--  <script>-->
+<!--    $(document).ready(function () {-->
+
+<!--      $('.table #eBtn').on('click', function (event) {-->
+<!--        event.preventDefault();-->
+<!--        let href = $(this).attr('href');-->
+
+<!--        $.get(href, function (user) {-->
+<!--          $('.myForm #ID').val(user.id);-->
+<!--          $('.myForm #username').val(user.username);-->
+<!--          $('.myForm #lastName').val(user.lastName);-->
+<!--          $('.myForm #Agee').val(user.age);-->
+<!--          $('.myForm #emaill').val(user.email);-->
+<!--          $('.myForm #inputPassword555').val(user.password);-->
+<!--          $('.myForm #rol').val(user.roles);-->
+<!--        })-->
+
+<!--        $('.myForm #editModal').modal();-->
+<!--      })-->
+<!--    })-->
+
+<!--  </script>-->
+
 </body>
 </html>

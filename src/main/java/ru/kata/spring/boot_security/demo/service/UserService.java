@@ -40,7 +40,10 @@ public class UserService implements UserDetailsService {
 
     public User findUserById(Long id) {
         Optional<User> userFromDb = userRepository.findById(id);
-        return userFromDb.orElse(new User());
+        if (userFromDb == null) {
+            throw new UsernameNotFoundException(String.format("User id '%s' not found", id));
+        }
+        return userFromDb.get();
     }
 
     public List<User> allUser() {

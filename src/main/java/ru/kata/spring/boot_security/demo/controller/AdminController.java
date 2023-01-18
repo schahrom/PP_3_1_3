@@ -5,10 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.model.InitClass;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -27,33 +26,44 @@ public class AdminController {
 
     @Autowired
     private static InitClass initClass;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @GetMapping("/list")
     public String listUser(Model model, Principal principal) {
         Optional<User> user = userService.findByUserName(principal.getName());
-        model.addAttribute("user", user.get());
+        model.addAttribute("admin", user.get());
         List<User> allUser = userService.allUser();
         model.addAttribute("allUser", allUser);
         model.addAttribute("newUser", new User());
 
         model.addAttribute("allRoles", roleService.findAllRoles());
-        return "admin-pages(copy)";
+        return "admin-page";
     }
-
-
-//    @GetMapping("/list/{profile}")
-//    public String newUserEntity(Model model) {
-//        model.addAttribute("newUser", new User());
-//        return "admin-pages(copy)";
-//    }
-
     @PostMapping
     public String create(@ModelAttribute("newUser") User user) {
         userService.saveUser(user);
         return "redirect:/admin/list";
 
     }
+
+
+
+    @GetMapping("/findOne")
+    @ResponseBody
+    public User findUserById(Long id) {
+        return userService.findUserById(id);
+    }
+
+    @PatchMapping("/save")
+    public String update(User user) {
+        userService.saveUser(user);
+        return "redirect:/admin/list";
+    }
+
+
+
 
 //    @GetMapping("/edit/{id}")
 //    public ModelAndView editUser(@PathVariable(name = "id") Long id) {
