@@ -62,6 +62,12 @@ public class AdminController {
         return "redirect:/admin/list";
     }
 
+    @GetMapping("/delete")
+    public String deleteUser(Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin/list";
+    }
+
 
 
 
