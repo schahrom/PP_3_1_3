@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" xmlns="http://www.w3.org/1999/html">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -90,34 +90,30 @@
                                         <td th:text="${user.age}"/>
                                         <td th:text="${user.getEmail()}"/>
                                         <td th:text="${user.getRoles()}"/>
-                                        <td><a th:href="@{findOne/(id=${user.id})}" class="btn btn-info eBtn">Edit</a>
+                                        <td>
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-info editBtn" data-toggle="modal"
+                                                    data-target="#editModal" th:href="@{/admin/getOne/(id=${user.id})}">
+                                                Edit
+                                            </button>
                                         </td>
-                                        <td><a th:href="@{findOne/(id=${user.id})}"
-                                               class="btn btn-danger delBtn">Delete</a></td>
-                                        <!--                                        <td>-->
-                                        <!--                                            &lt;!&ndash; Button trigger modal &ndash;&gt;-->
-                                        <!--                                            <button type="button" class="" data-toggle="modal"-->
-                                        <!--                                                    data-target="#editModal">-->
-                                        <!--                                                Edit-->
-                                        <!--                                            </button>-->
-                                        <!--                                        </td>-->
-                                        <!--                                        <td>-->
-                                        <!--                                            &lt;!&ndash; Button trigger modal &ndash;&gt;-->
-                                        <!--                                            <button type="button" class="btn btn-danger" data-toggle="modal"-->
-                                        <!--                                                    data-target="#exampleModal">-->
-                                        <!--                                                Delete-->
-                                        <!--                                            </button>-->
-                                        <!--                                        </td>-->
+                                        <td>
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-danger deleteBtn" data-toggle="modal"
+                                                    data-target="#deleteModal" th:href="@{/admin/getOne/(id=${user.id})}">
+                                                Delete
+                                            </button>
+                                        </td>
 
                                     </tr>
                                     </tbody>
                                 </table>
                                 <!-- Модальное окно -->
                                 <div class="myForm">
-                                    <form th:action="@{save/}" th:method="PATCH">
                                         <div class="modal fade" id="editModal" data-backdrop="static"
                                              data-keyboard="false" tabindex="-1"
                                              aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <form th:action="@{/admin/update}" th:method="put">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
 
@@ -181,29 +177,28 @@
                                                         <div class="form-group">
                                                             <label for="role" class="form-label fw-bold">Roles</label>
                                                             <select multiple class="form-control" id="role" name="role">
-                                                                <option th:each="role : ${allRoles}"
-                                                                        th:value="${role.id}"
-                                                                        th:text="${role.name}"/>
+
+
+
                                                             </select>
                                                         </div>
                                                         <button type="button" class="btn btn-secondary"
                                                                 data-dismiss="modal">Close
                                                         </button>
-                                                        <button type="button submit" id="save-user-button"
+                                                        <button type="submit" id="save-user-button"
                                                                 class="btn btn-primary">Edit
                                                         </button>
                                                     </div>
-
                                                 </div>
                                             </div>
+                                            </form>
                                         </div>
-                                    </form>
                                 </div>
 
 
                                 <!-- Modal -->
                                 <div class="myDeleteForm">
-                                    <form th:action="@{delete/}">
+                                    <form th:action="@{/admin/delete}" th:method="delete">
                                         <div class="modal" id="deleteModal" tabindex="-1" role="dialog"
                                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -274,8 +269,6 @@
                                                                     id="dRole" multiple
                                                                     disabled size="2" name="role"
                                                                     value="">
-                                                                <option>ADMIN</option>
-                                                                <option>USER</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -397,52 +390,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
-<script>
-    $(document).ready(function () {
-        $('.table .delBtn').on('click', function (event) {
-            event.preventDefault();
-            let href = $(this).attr('href');
-
-            $.get(href, function (user, status) {
-                $('.myDeleteForm #dId').val(user.id);
-                $('.myDeleteForm #dUsername').val(user.username);
-                $('.myDeleteForm #dLastName').val(user.lastName);
-                $('.myDeleteForm #dAge').val(user.age);
-                $('.myDeleteForm #dEmail').val(user.email);
-                $('.myDeleteForm #dPassword').val(user.password);
-                // $('.myDeleteForm #dRole').val(user.roles);
-            })
-
-            $('.myDeleteForm #delRef').attr('href')
-            $('.myDeleteForm #deleteModal').modal();
-        })
-
-
-        $('.table .eBtn').on('click', function (event) {
-            event.preventDefault();
-            let href = $(this).attr('href');
-
-            $.get(href, function (user, status) {
-                $('.myForm #id').val(user.id);
-                $('.myForm #username').val(user.username);
-                $('.myForm #lastName').val(user.lastName);
-                $('.myForm #age').val(user.age);
-                $('.myForm #email').val(user.email);
-                $('.myForm #password').val(user.password);
-                // $('.myForm #role').val(user.roles);
-                // for(let i=0; i<=user.roles.length-1; i++) {
-                //     let array = user.roles
-                //     $('.myForm #role').append('<option value="'+ array[0].id +'">'+array[0].name +'</option>')
-                // }
-            })
-
-            $('.myForm #editModal').modal();
-        })
-    })
-
-
-</script>
-
+<script type="text/javascript" src="../static/main.js"  th:src="@{/main.js}"></script>
 </body>
 </html>

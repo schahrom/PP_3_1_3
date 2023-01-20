@@ -61,14 +61,10 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public boolean deleteUser(Long userId) {
-        if (userRepository.findById(userId).isPresent()) {
+    public void deleteUser(Long userId) {
             User user = findUserById(userId);
             user.getRoles().clear();
             userRepository.deleteById(userId);
-            return true;
-        }
-        return false;
     }
 
     public void update(User user) {;

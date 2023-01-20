@@ -1,7 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,6 +31,8 @@ public class User implements UserDetails {
 
     public User() {
     }
+
+
 
     public User(String email, String password, String username, Long age, String lastName) {
         this.email = email;

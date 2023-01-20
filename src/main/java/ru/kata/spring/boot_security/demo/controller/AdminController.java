@@ -2,16 +2,20 @@ package ru.kata.spring.boot_security.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.InitClass;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +27,6 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private static InitClass initClass;
-    @Autowired
-    private UserRepository userRepository;
-
 
     @GetMapping("/list")
     public String listUser(Model model, Principal principal) {
@@ -45,54 +43,26 @@ public class AdminController {
     public String create(@ModelAttribute("newUser") User user) {
         userService.saveUser(user);
         return "redirect:/admin/list";
-
     }
 
-
-
-    @GetMapping("/findOne")
+    @RequestMapping("/getOne")
     @ResponseBody
-    public User findUserById(Long id) {
+    private User getOne(Long id) {
         return userService.findUserById(id);
     }
 
-    @PatchMapping("/save")
+    @RequestMapping(value = "/update", method = {RequestMethod.PUT, RequestMethod.GET})
     public String update(User user) {
-        userService.saveUser(user);
-        return "redirect:/admin/list";
-    }
-
-    @GetMapping("/delete")
-    public String deleteUser(Long id) {
-        userService.deleteUser(id);
+        userService.update(user);
         return "redirect:/admin/list";
     }
 
 
+    @RequestMapping(value = "/delete", method = {RequestMethod.DELETE, RequestMethod.GET})
+    public String delete(@RequestBody User user) {
+        userService.deleteUser(user.getId());
+        return "redirect:/admin/list";
+    }
 
-
-//    @GetMapping("/edit/{id}")
-//    public ModelAndView editUser(@PathVariable(name = "id") Long id) {
-//        User user = userService.findUserById(id);
-//        ModelAndView mav = new ModelAndView("edit");
-//        mav.addObject("user", user);
-//        List<Role> roles = roleService.findAllRoles();
-//        mav.addObject("allRoles", roles);
-//
-//        return mav;
-//    }
-
-//    @PostMapping ("/{id}")
-//    public String update(@ModelAttribute("user") User user) {
-//        userService.update(user);
-//        return "redirect:/admin/list";
-//
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public String delete(@PathVariable("id") Long id) {
-//        userService.deleteUser(id);
-//        return "redirect:/admin/list";
-//    }
 }
 
